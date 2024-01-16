@@ -499,7 +499,7 @@ def addTestTyres_one(id,p1,p2,p3,p4,p5,p6,remark,status):
     request_data = json.loads(request.data)
     print(request_data)
     img = request_data.get('nameValuePairs', {}).get('img', '')
-    print(img)
+    print(img)  
     return obj.addTestTyres_model(id,p1,p2,p3,p4,p5,p6,remark,status,img) 
 
 #TAB_RETRO
@@ -752,8 +752,18 @@ def CheckTest_Spray(id):
 def CheckTest_Tyres(id):
     return obj.checkTest_tyres_model(id) 
 
-
 #CHECK DASHBOARD TEST
 @app.route("/test/check/retro/<id>", methods=["GET"])
 def CheckTest_retro(id):
     return obj.checkTest_retro_model(id) 
+
+#CHECK DASHBOARD TEST
+@app.route("/test/getAllData/<id>", methods=["POST"])
+def getAllTest(id):
+    return obj.getAlltestData(id) 
+
+
+#ADDTESTDATA
+@app.route("/test/add", methods=["POST"])
+def addTest_one():
+    return  obj.add_test_data_model(request.json)
