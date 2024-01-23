@@ -14,15 +14,20 @@ class user_model():
         try:
             self.con =  mysql.connector.connect(host="localhost",user="root",password="Ga2001pillu14##",database="vft_app")
             self.con.autocommit = True
-            self.con.connect_timeout = 25
+            self.con._connection_timeout = 60
             self.cur = self.con.cursor(dictionary=True)
             self.con2 =  mysql.connector.connect(host="localhost",user="root",password="Ga2001pillu14##",database="dunit")
             self.con2.autocommit = True
-            self.con2.connect_timeout = 25
+            self.con2._connection_timeout = 60
             self.cur2 = self.con2.cursor(dictionary=True)
             print("success")
         except mysql.connector.Error as err:
-            print(f"Error: {err}")
+            if err.errno == mysql.connector.errorcode.CR_SERVER_LOST:
+                print("Server connection lost. Reconnecting...")
+                self.con.reconnect()
+                time.sleep(50)
+            else:
+                print(f"Error: {err}")
 
 
 ###############check API
@@ -934,7 +939,8 @@ class user_model():
 
                 if cur2.rowcount > 0:
                     cur2.nextset()
-                    res = make_response({"addStation": result},200)
+                    res = make_response({"addStation": "added successfully"},200)
+                    # res = make_response({"addStation": result},200)
                     res.headers['Access-Control-Allow-Origin'] = "*"
                     res.headers['Content-Type'] = 'application/json'
                     return res

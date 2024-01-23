@@ -27,3 +27,11 @@ def process_controller():
 @app.route("/getlogin_process",methods=["POST"])
 def login_process_controller():
     return obj2.get_process_and_login_data(request.form)
+
+@app.route("/task_assigned",methods=["POST"])
+def task_assigned_controller():
+    return obj2.task_assigned_model(request.json)
+
+@app.route("/get/task_assigned",methods=["POST"])
+def get_task_assigend_model():
+    return obj2.get_task_assigend_model()

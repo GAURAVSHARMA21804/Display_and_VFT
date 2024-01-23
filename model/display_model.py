@@ -1,6 +1,8 @@
 import mysql.connector
 import json
 from flask import make_response,jsonify
+from datetime import datetime
+import pytz
 # class user_model():
 #     def _init_(self):
 #         try:
@@ -110,3 +112,42 @@ class display_unit_model():
         except mysql.connector.Error as err:
             print(f"MySQL Error: {err}")
             return make_response({"error": "Internal Server Error"}, 500)
+    
+    def task_assigned_model(self, data):
+        try:
+            now_utc = datetime.now(pytz.utc)
+            ist = pytz.timezone('Asia/Kolkata')
+            now_ist = now_utc.astimezone(ist)
+            assigned_for_date = now_ist.strftime('%Y-%m-%d')
+            assigned_timing = now_ist.strftime('%Y-%m-%d')
+
+            qry = "INSERT INTO task_assigned(floor_id, line_id, part_id, part_name, prev_quantity, quantity, assigned_timing, assigned_for_date) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            values = [(taskassigned.get('floor_id'),
+                taskassigned.get('line_id'),
+                taskassigned.get('part_id'),
+                taskassigned.get('part_name'),
+                taskassigned.get('prev_quantity'),
+                taskassigned.get('quantity'),
+                assigned_timing,
+                assigned_for_date) for taskassigned in data]
+           
+            self.cur.executemany(qry, values)
+            return make_response({"message": "task_assigned successfully"}, 201)
+        except mysql.connector.Error as err:
+            print(f"MySQL Error: {err}")
+            return make_response({"error": "Internal Server Error"}, 500)
+    
+    def get_task_assigend_model(self):
+        try:
+            self.cur.execute("SELECT * FROM task_assigned WHERE part_id = 1")
+            result=self.cur.fetchall()
+            if len(result)>0:
+              res = make_response({'payload':result},200)
+              res.headers['Access-Control-Allow-Origin']="*"
+              return res
+            else:
+                return make_response({"message":"No Data found"},204)
+        except mysql.connector.Error as err:
+            print(f"MySQL Error: {err}")
+            return make_response({"error": "Internal Server Error"}, 500)
+        
