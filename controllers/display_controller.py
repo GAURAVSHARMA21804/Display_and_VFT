@@ -32,6 +32,18 @@ def login_process_controller():
 def task_assigned_controller():
     return obj2.task_assigned_model(request.json)
 
+# @app.route("/get/task_assigned",methods=["POST"])
+# def get_task_assigend_model():
+#     return obj2.get_task_assigend_model()
+
+@app.route("/get/assigend_parts",methods=["POST"])
+def get_assigned_parts_controller():
+    return obj2.get_asssigned_parts_model()
+
 @app.route("/get/task_assigned",methods=["POST"])
 def get_task_assigend_model():
-    return obj2.get_task_assigend_model()
+    return obj2.get_task_assigend_model(request.form)
+
+@app.route("/update/assigned_parts_stations",methods=["POST"])
+def update_assigned_parts_controller():
+    return obj2.update_assigned_parts_model(request.form)

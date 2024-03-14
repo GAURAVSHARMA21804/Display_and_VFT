@@ -792,7 +792,7 @@ class user_model():
 
                 cur2.execute(query)
                 result = cur2.fetchall()
-                # print(result)
+                print(result)
            
                 if result is not None:
 
